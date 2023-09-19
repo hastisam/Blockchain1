@@ -1,0 +1,145 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+//Answers are comments
+contract Home{
+    address landlorde;
+    enum Price {veryHigh,High,Low,veryLow}
+        enum Roommate{None,Noisy,Smoker,AlwaysSick}
+        enum TimeOfRent{ThirtyDays,twentyFiveDays,TwentyDays,FifteenDays}
+        struct Room{
+            Price price;
+            Roommate roommate;
+            TimeOfRent timeofrent;
+        }
+        mapping (uint=>Room) public room;
+    constructor(){
+    //constructor(address land){
+        room[1].price=Price.veryLow;
+        room[1].roommate=Roommate.None;
+        room[1].timeofrent=TimeOfRent.ThirtyDays;
+
+        room[2].price=Price.Low;
+        room[2].roommate=Roommate.Noisy;
+        room[2].timeofrent=TimeOfRent.twentyFiveDays;
+
+        room[3].price=Price.High;
+        room[3].roommate=Roommate.Smoker;
+        room[3].timeofrent=TimeOfRent.TwentyDays;
+
+        room[4].price=Price.veryHigh;
+        room[4].roommate=Roommate.AlwaysSick;
+        room[4].timeofrent=TimeOfRent.FifteenDays;
+        //landlorde=land;
+        landlorde=msg.sender;
+    }
+    // function changeThePrice (uint rom,string memory  pric) public{
+    //     require(rom<=4,"only 4 rooms");
+    //    if (keccak256(bytes(pric)) == keccak256(bytes("very High"))){
+    //        room[rom].price=Price.veryHigh;
+    //    }else if (keccak256(bytes(pric)) == keccak256(bytes("High")))
+    //    {
+    //        room[rom].price=Price.High;
+    //    }else if (keccak256(bytes(pric)) == keccak256(bytes("Low"))){
+    //        room[rom].price=Price.Low;
+    //    }else if (keccak256(bytes(pric)) == keccak256(bytes("very Low"))){
+    //        room[rom].price=Price.veryLow;
+    //    }
+    //    else{
+    //        require(false,"Not defined");
+    //    }
+        
+    // }
+    // function changeTheroommate(uint rom,string memory rommate) public{
+    //        require(rom<=4,"only 4 rooms");
+    //       if (keccak256(bytes(rommate)) == keccak256(bytes("None"))){
+    //        room[rom].roommate=Roommate.None;
+    //    }else if (keccak256(bytes(rommate)) == keccak256(bytes("Noisy")))
+    //    {
+    //        room[rom].roommate=Roommate.Noisy;
+    //    }else if (keccak256(bytes(rommate)) == keccak256(bytes("Smoker"))){
+    //        room[rom].roommate=Roommate.Smoker;
+    //    }else if (keccak256(bytes(rommate)) == keccak256(bytes("Always sick"))){
+    //        room[rom].roommate=Roommate.AlwaysSick;
+    //    }
+    //    else{
+    //        require(false,"Not defined");
+    //    }
+        
+    // }
+
+
+    //  function changeTheTimeofrent(uint rom,string memory time) public{
+    //        require(rom<=4,"only 4 rooms");
+    //       if (keccak256(bytes(time)) == keccak256(bytes("Thirty days"))){
+    //        room[rom].timeofrent=TimeOfRent.ThirtyDays;
+    //    }else if (keccak256(bytes(time)) == keccak256(bytes("Twenty five days")))
+    //    {
+    //        room[rom].timeofrent=TimeOfRent.twentyFiveDays;
+    //    }else if (keccak256(bytes(time)) == keccak256(bytes("Twenty days"))){
+    //        room[rom].timeofrent=TimeOfRent.TwentyDays;
+    //    }else if (keccak256(bytes(time)) == keccak256(bytes("Fifteen days"))){
+    //        room[rom].timeofrent=TimeOfRent.FifteenDays;
+    //    }
+    //    else{
+    //        require(false,"Not defined");
+    //    }
+        
+    // }
+
+        function ShowingPrices (uint roomaddress) public view returns(string memory p)
+        {
+             require(roomaddress<=4,"only 4 rooms");
+            require(msg.sender==landlorde,"Only landlorde can see the states!");
+            //require(!msg.sender==landlorde,"Only landlorde can see the states!");
+            if (room[roomaddress].price==Price.veryHigh){
+                p="very High";
+            }
+            if (room[roomaddress].price==Price.veryLow){
+                p="very Low";
+            }
+            if (room[roomaddress].price==Price.High){
+                p="High";
+            }
+            if (room[roomaddress].price==Price.Low){
+                p="Low";
+            }
+        }
+        function showinRoommates (uint roomaddress) public view returns(string memory p)
+        {
+            require(roomaddress<=4,"only 4 rooms");
+            require(msg.sender==landlorde,"Only landlorde can see the states!");
+            //require(!msg.sender==landlorde,"Only landlorde can see the states!");
+            if (room[roomaddress].roommate==Roommate.None){
+                p="No Roommates";
+            }
+            if (room[roomaddress].roommate==Roommate.Noisy){
+                p="Noisy Roommate";
+            }
+            if (room[roomaddress].roommate==Roommate.Smoker){
+                p="Smoker Roommate";
+            }
+            if (room[roomaddress].roommate==Roommate.AlwaysSick){
+                p="Always sick Roommate";
+            }
+
+        }
+        function ShowingTimeOfRent (uint roomaddress) public view returns (string memory p)
+        {
+            require(roomaddress<=4,"only 4 rooms");
+            require(msg.sender==landlorde,"Only landlorde can see the states!");
+            //require(!msg.sender==landlorde,"Only landlorde can see the states!");
+            if (room[roomaddress].timeofrent==TimeOfRent.ThirtyDays){
+                p="you can rent for 30 days";
+            }
+            if (room[roomaddress].timeofrent==TimeOfRent.twentyFiveDays){
+                p="you can rent for 25 days";
+            }
+            if (room[roomaddress].timeofrent==TimeOfRent.TwentyDays){
+                p="you can rent for 20 days";
+            }
+             if (room[roomaddress].timeofrent==TimeOfRent.FifteenDays){
+                p="you can rent for 15 days";
+            }
+            
+        }
+}

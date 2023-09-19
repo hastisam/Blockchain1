@@ -1,0 +1,40 @@
+/ SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+contract Test1{
+    string public myString;
+    function equality(string memory String) public returns(bool Isequal) {
+        if(String==myString){
+            //keccak256(bytes(String)) == keccak256(bytes(myString))
+            //it gives an erroe because the String is in memory and myString in storage
+            Isequal=true;
+        }
+        else{
+            Isequal=false;
+        }
+    }
+}
+
+
+contract test3{
+    address account;
+    constructor() {
+        account=0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
+    }
+    function wuthdraw() private payable {
+        //The function should be public
+         (bool success, ) = account.call{value:msg.value}("");
+         require(success); 
+    }
+}
+
+
+
+contract test3{
+    address payable myaddress;
+    uint myUint=10;
+    //uint myUint=msg.value;
+    function withdraw() public payable{
+        myaddress.transfer(myUint);
+    }
+}
+

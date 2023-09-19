@@ -1,0 +1,86 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+contract Home{
+    address landlorde;
+    enum Price {veryHigh,High,Low,veryLow}
+        enum Roommate{None,Noisy,Smoker,AlwaysSick}
+        enum TimeOfRent{ThirtyDays,twentyFiveDays,TwentyDays,FifteenDays}
+        struct Room{
+            Price price;
+            Roommate roommate;
+            TimeOfRent timeofrent;
+        }
+        mapping (uint=>Room) public room;
+    constructor(){
+        room[1].price=Price.veryLow;
+        room[1].roommate=Roommate.None;
+        room[1].timeofrent=TimeOfRent.ThirtyDays;
+
+        room[2].price=Price.Low;
+        room[2].roommate=Roommate.Noisy;
+        room[2].timeofrent=TimeOfRent.twentyFiveDays;
+
+        room[3].price=Price.High;
+        room[3].roommate=Roommate.Smoker;
+        room[3].timeofrent=TimeOfRent.TwentyDays;
+
+        room[4].price=Price.veryHigh;
+        room[4].roommate=Roommate.AlwaysSick;
+        room[4].timeofrent=TimeOfRent.FifteenDays;
+        landlorde=msg.sender;
+    }
+    
+        function ShowingPrices (uint roomaddress) public view returns(string memory p)
+        {
+             require(roomaddress<=4,"only 4 rooms");
+            require(msg.sender==landlorde,"Only landlorde can see the states!");
+            if (room[roomaddress].price==Price.veryHigh){
+                p="very High";
+            }
+            if (room[roomaddress].price==Price.veryLow){
+                p="very Low";
+            }
+            if (room[roomaddress].price==Price.High){
+                p="High";
+            }
+            if (room[roomaddress].price==Price.Low){
+                p="Low";
+            }
+        }
+        function showinRoommates (uint roomaddress) public view returns(string memory p)
+        {
+            require(roomaddress<=4,"only 4 rooms");
+            require(msg.sender==landlorde,"Only landlorde can see the states!");
+            if (room[roomaddress].roommate==Roommate.None){
+                p="No Roommates";
+            }
+            if (room[roomaddress].roommate==Roommate.Noisy){
+                p="Noisy Roommate";
+            }
+            if (room[roomaddress].roommate==Roommate.Smoker){
+                p="Smoker Roommate";
+            }
+            if (room[roomaddress].roommate==Roommate.AlwaysSick){
+                p="Always sick Roommate";
+            }
+
+        }
+        function ShowingTimeOfRent (uint roomaddress) public view returns (string memory p)
+        {
+            require(roomaddress<=4,"only 4 rooms");
+            require(msg.sender==landlorde,"Only landlorde can see the states!");
+            if (room[roomaddress].timeofrent==TimeOfRent.ThirtyDays){
+                p="you can rent for 30 days";
+            }
+            if (room[roomaddress].timeofrent==TimeOfRent.twentyFiveDays){
+                p="you can rent for 25 days";
+            }
+            if (room[roomaddress].timeofrent==TimeOfRent.TwentyDays){
+                p="you can rent for 20 days";
+            }
+             if (room[roomaddress].timeofrent==TimeOfRent.FifteenDays){
+                p="you can rent for 15 days";
+            }
+            
+        }
+}

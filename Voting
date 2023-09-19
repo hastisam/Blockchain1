@@ -1,0 +1,77 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Voting {
+    struct Candidate {
+        string name;
+        uint256 voteCount;
+    }
+
+    mapping(address => bool) private hasVoted;
+    Candidate[] private candidates;
+    address manager;
+    constructor(address _manager){
+        manager=_manager;
+    }
+    function addCandidate(string memory _name) public {
+        require(msg.sender==manager,"You are not the manager so you can not add candidates");
+        require(bytes(_name).length > 0, "Candidate name cannot be empty");
+
+        for (uint256 i = 0; i < candidates.length; i++) {
+            require(
+                keccak256(bytes(candidates[i].name)) != keccak256(bytes(_name)),
+                "Candidate already exists"
+            );
+        }
+
+        candidates.push(Candidate(_name, 0));
+    }
+
+    function vote(string memory _candidateName) public {
+        require(
+            bytes(_candidateName).length > 0,
+            "Candidate name cannot be empty"
+        );
+        require(!hasVoted[msg.sender], "Already voted");
+        
+        bool candidateExists = false;
+        for (uint256 i = 0; i < candidates.length; i++) {
+            if (keccak256(bytes(candidates[i].name)) == keccak256(bytes(_candidateName))) {
+                candidates[i].voteCount++;
+                candidateExists = true;
+                break;
+            }
+        }
+        require(candidateExists, "Candidate does not exist");
+
+        hasVoted[msg.sender] = true;
+    }
+//--------------------------------------------------------------------------------------
+   //Answers below the line:
+    function getVoteCount(string memory _candidateName) public view returns (uint256) {
+        require(
+            bytes(_candidateName).length > 0,
+            "Candidate name cannot be empty"
+        );
+        
+        for (uint256 i = 0; i < candidates.length; i++) {
+            if (keccak256(bytes(candidates[i].name)) == keccak256(bytes(_candidateName))) {
+                return candidates[i].voteCount;
+            }
+        }
+        
+        revert("Candidate does not exist");
+    }
+    function ShowingThewinner () public view returns(string memory winner){
+        require(msg.sender==manager,"Only manager can show the winner");
+        uint winnerCount = 0;
+        uint index=0;
+        for (uint p = 0; p < candidates.length; p++) {
+            if (candidates[p].voteCount > winnerCount) {
+                winnerCount = candidates[p].voteCount;
+                index=p;
+            }
+        }
+        winner=candidates[index].name;
+    }
+}

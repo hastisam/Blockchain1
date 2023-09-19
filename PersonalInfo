@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract PersonalInformation {
+    struct Person {
+        string name;
+        uint age;
+        string email;
+    }
+    
+    mapping(address => Person) private persons;
+    
+    function storeInformation(string memory _name, uint _age, string memory _email) public {
+        Person memory newPerson = Person(_name, _age, _email);
+        persons[msg.sender] = newPerson;
+    }
+    
+    function getInformation() public view returns (string memory, uint, string memory) {
+        return (
+            persons[msg.sender].name,
+            persons[msg.sender].age,
+            persons[msg.sender].email
+        );
+    }
+}

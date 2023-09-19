@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Voting {
+    struct Candidate {
+        string name;
+        uint256 voteCount;
+    }
+
+    mapping(address => bool) private hasVoted;
+    Candidate[] private candidates;
+    address manager;
+    constructor(address _manager){
+        manager=_manager;
+    }
+    function addCandidate(string memory _name) public {
+        require(msg.sender==manager,"You are not the manager so you can not add candidates");
+        require(bytes(_name).length > 0, "Candidate name cannot be empty");
+
+        for (uint256 i = 0; i < candidates.length; i++) {
+            require(
+                keccak256(bytes(candidates[i].name)) != keccak256(bytes(_name)),
+                "Candidate already exists"
+            );
+        }
+
+        candidates.push(Candidate(_name, 0));
+    }
+}

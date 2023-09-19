@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+contract Resturant{
+    struct People{
+        string Name;
+        string ordered;
+    }
+    mapping(address=>People) public people;
+    address payable public manager;
+    bool callFallback;
+    struct food{
+        string KindOfFood;
+        uint Price;
+    }
+    food[] public Food;
+    constructor(string[] memory NamesOfFoods,uint[] memory pricesOfFoods) payable{
+        manager=payable(msg.sender);
+        for(uint i=0;i<NamesOfFoods.length;i++)
+        {
+            Food.push(food({KindOfFood : NamesOfFoods[i],Price:pricesOfFoods[i]}));
+        }
+
+    }
+    uint public num=0;
+    function Order (string memory NameOfFood,address costumerAddress,string memory Name) public{
+        require(msg.sender==manager,"Only manager can get the orders!");
+        for(uint i=0;i<Food.length;i++){
+            if (keccak256(bytes(Food[i].KindOfFood)) == keccak256(bytes(NameOfFood)))
+            {
+                num=i;
+            }
+        }
+        people[costumerAddress].ordered=Food[num].KindOfFood;
+        people[costumerAddress].Name=Name;
+    }
+   
+    function withdraw() public payable {
+        require(address(msg.sender).balance>=Food[num].Price,"you do not have enough money!");
+        require(msg.value==Food[num].Price,"this is not the money that should be paid");
+        manager.transfer(msg.value);
+    }
+}
